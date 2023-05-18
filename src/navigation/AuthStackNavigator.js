@@ -5,7 +5,8 @@ import SignUpScreen from "../screens/auth/SignUpScreen";
 
 const AuthStack = createStackNavigator();
 
-export default function AuthStackNavigator() {
+export default function AuthStackNavigator({ handleLogin }) {
+  console.log("AuthStackNavigator handleLogin", handleLogin);
   return (
     <AuthStack.Navigator initialRouteName="Login">
       <AuthStack.Screen
@@ -17,6 +18,7 @@ export default function AuthStackNavigator() {
           animationEnabled: false,
           swipeEnabled: false,
         }}
+        initialParams={{ handleLogin }} // Pass handleLogin as a parameter
       />
       <AuthStack.Screen
         name="SignUp"

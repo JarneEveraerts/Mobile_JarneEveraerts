@@ -19,7 +19,7 @@ import { auth } from "../../../firebase";
 import useSaveUid from "../../hooks/memory/useSaveUid";
 import useGetUid from "../../hooks/memory/useGetUid";
 
-export default function LoginComponent() {
+export default function LoginComponent({ onLogin }) {
   const navigation = useNavigation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -27,14 +27,15 @@ export default function LoginComponent() {
   const saveUid = useSaveUid();
   useEffect(() => {
     if (loggedIn) {
-      navigation.navigate("Products", { screen: "Products" }); // Navigate to "Products" screen
+      onLogin();
     }
-  }, [loggedIn, navigation]);
+  }, [loggedIn, onLogin]);
   const handleLogin = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed in
         const user = userCredential.user;
+        console.log("User logged in", user.uid);
 
         saveUid(user.uid);
         setLoggedIn(true);
@@ -44,6 +45,9 @@ export default function LoginComponent() {
         const errorMessage = error.message;
         console.log("Error logging in", errorCode, errorMessage);
       });
+    if (loggedIn) {
+      onLogin();
+    }
   };
 
   return (
