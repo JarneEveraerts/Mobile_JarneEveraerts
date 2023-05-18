@@ -27,7 +27,7 @@ export default function LoginComponent() {
   const saveUid = useSaveUid();
   useEffect(() => {
     if (loggedIn) {
-      navigation.navigate("root", { screen: "Products" }); // Navigate to "Products" screen
+      navigation.navigate("Products", { screen: "Products" }); // Navigate to "Products" screen
     }
   }, [loggedIn, navigation]);
   const handleLogin = () => {

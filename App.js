@@ -36,7 +36,7 @@ export default function App() {
       <NavigationContainer>
         <Tab.Navigator>
           <Tab.Screen
-            name="Products"
+            name="Products" //needs to navigate to this screen after login
             component={ProductStackNavigator}
             options={{
               headerShown: false,
