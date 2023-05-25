@@ -24,6 +24,9 @@ export default function AuthStackNavigator({ handleLogin }) {
         name="SignUp"
         component={SignUpScreen}
         options={{
+          gestureEnabled: false,
+          animationEnabled: false,
+          swipeEnabled: false,
           headerShown: false,
           backBehavior: "order",
         }}

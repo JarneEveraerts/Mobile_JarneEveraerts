@@ -1,13 +1,28 @@
 import React, { useEffect } from "react";
-import { View, Text, Image, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  Button,
+  TouchableOpacity,
+} from "react-native";
+import { useDispatch } from "react-redux";
+import { clearCart } from "../../store/cart/slice";
 
-import useGetById from "../../hooks/users/GetById";
+import useGetById from "../../hooks/users/useGetById";
 import useGetUid from "../../hooks/memory/useGetUid";
 
-export default function ProfileScreen() {
+export default function ProfileScreen({ handleLogOut }) {
+  const dispatch = useDispatch();
   const uId = useGetUid();
   const user = useGetById(uId);
-  console.log(user);
+  console.log(user + "ProfileScreen user");
+  const logOut = () => {
+    dispatch(clearCart());
+    handleLogOut();
+  };
+  console.log(handleLogOut + "ProfileScreen handleLogout");
   return (
     <View style={styles.container}>
       <View style={styles.profileContainer}>
@@ -23,6 +38,12 @@ export default function ProfileScreen() {
         <Text style={styles.label}>Email:</Text>
         <Text style={styles.value}>{user?.email}</Text>
       </View>
+
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.button} onPress={() => logOut()}>
+          <Text style={styles.buttonText}>Logout</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -33,7 +54,7 @@ const styles = StyleSheet.create({
     padding: 16,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#FFFFFF", // Adjust the background color as needed
+    backgroundColor: "#1E1E1E", // Dark background color
   },
   profileContainer: {
     flexDirection: "row",
@@ -47,7 +68,7 @@ const styles = StyleSheet.create({
   nameText: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#333333", // Adjust the text color as needed
+    color: "#FFFFFF", // Light text color
   },
   infoContainer: {
     flexDirection: "row",
@@ -61,11 +82,24 @@ const styles = StyleSheet.create({
   },
   value: {
     fontSize: 16,
-    color: "#333333", // Adjust the text color as needed
+    color: "#FFFFFF", // Light text color
   },
   profilePicture: {
     width: 80,
     height: 80,
     borderRadius: 40,
+    backgroundColor: "#292929", // Dark background color
+  },
+  button: {
+    backgroundColor: "#6B0F1A", // Bordeaux accent color
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 4,
+    alignItems: "center",
+  },
+  buttonText: {
+    color: "#FFFFFF", // Light text color
+    fontSize: 16,
+    fontWeight: "bold",
   },
 });

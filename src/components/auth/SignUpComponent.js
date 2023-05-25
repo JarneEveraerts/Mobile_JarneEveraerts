@@ -11,10 +11,12 @@ import {
 } from "react-native";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../../firebase";
+import { useNavigation } from "@react-navigation/native";
 
 import User from "../../../models/User";
 
 export default function SignUpComponent() {
+  const navigation = useNavigation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -46,12 +48,14 @@ export default function SignUpComponent() {
           placeholder="Name"
           value={name}
           onChangeText={(text) => setName(text)}
+          placeholderTextColor="#999" // Placeholder text color
         />
         <TextInput
           style={styles.input}
           placeholder="Email"
           value={email}
           onChangeText={(text) => setEmail(text)}
+          placeholderTextColor="#999" // Placeholder text color
         />
         <TextInput
           style={styles.input}
@@ -59,14 +63,22 @@ export default function SignUpComponent() {
           secureTextEntry={true}
           value={password}
           onChangeText={(text) => setPassword(text)}
+          placeholderTextColor="#999" // Placeholder text color
         />
         <TextInput
           style={styles.input}
-          placeholder="ConfirmPassword"
+          placeholder="Confirm Password"
           secureTextEntry={true}
           value={confirmPassword}
           onChangeText={(text) => setConfirmPassword(text)}
+          placeholderTextColor="#999" // Placeholder text color
         />
+        <TouchableOpacity
+          style={styles.link}
+          onPress={() => navigation.navigate("Login")}
+        >
+          <Text style={styles.linkText}>Already have an account?</Text>
+        </TouchableOpacity>
       </View>
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.button} onPress={handleSignUp}>
@@ -81,7 +93,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#f2f2f2",
+    backgroundColor: "#1E1E1E", // Dark background color
     paddingHorizontal: 16,
     width: "100%",
   },
@@ -92,22 +104,36 @@ const styles = StyleSheet.create({
   input: {
     height: 40,
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: "#6B0F1A", // Bordeaux accent color
     borderRadius: 4,
     paddingHorizontal: 12,
     marginBottom: 12,
-    backgroundColor: "#fff",
-    width: "100%", // Set the width to 100%
+    backgroundColor: "#292929", // Dark background color
+    color: "#FFFFFF", // Light text color
+  },
+  link: {
+    alignSelf: "flex-end",
+    marginTop: -10,
+  },
+  linkText: {
+    color: "#6B0F1A", // Bordeaux accent color
+    fontSize: 14,
+    fontWeight: "bold",
+  },
+  buttonContainer: {
+    width: "100%",
+    alignItems: "center",
   },
   button: {
-    backgroundColor: "#2196F3",
+    backgroundColor: "#6B0F1A", // Bordeaux accent color
     paddingVertical: 12,
     paddingHorizontal: 24,
     borderRadius: 4,
     alignItems: "center",
+    marginBottom: 12,
   },
   buttonText: {
-    color: "#fff",
+    color: "#FFFFFF", // Light text color
     fontSize: 16,
     fontWeight: "bold",
   },

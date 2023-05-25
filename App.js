@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Image } from "react-native";
 import { Provider } from "react-redux";
 import store from "./src/store/index";
 import {
@@ -32,6 +32,12 @@ export default function App() {
     setIsLoggedIn(true);
     console.log("Login : app.js");
   };
+  const handleLogOut = () => {
+    // Perform logout logic
+    setIsLoggedIn(false);
+
+    console.log("Logout : app.js");
+  };
 
   return (
     <Provider store={store}>
@@ -44,7 +50,14 @@ export default function App() {
               )}
             </RootStack.Screen>
           ) : (
-            <RootStack.Screen name="Main" component={MainNavigator} />
+            <RootStack.Screen name="Main">
+              {(props) => (
+                <MainNavigator
+                  {...props}
+                  handleLogOut={handleLogOut} // Pass handleLogOut to MainNavigator
+                />
+              )}
+            </RootStack.Screen>
           )}
         </RootStack.Navigator>
       </NavigationContainer>
@@ -52,15 +65,33 @@ export default function App() {
   );
 }
 
-function MainNavigator() {
+function MainNavigator({ handleLogOut }) {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator
+      initialRouteName="Products"
+      screenOptions={{
+        tabBarStyle: styles.tabBar, // Set background color here
+        tabBarActiveTintColor: "#6B0F1A", // Bordeaux accent color
+        tabBarInactiveTintColor: "#999", // Lighter text color
+        tabBarLabelStyle: styles.label,
+      }}
+    >
       <Tab.Screen
         name="Products"
         component={ProductStackNavigator}
         options={{
           headerShown: false,
           backBehavior: "order",
+          tabBarIcon: ({ focused }) => (
+            <Image
+              source={
+                focused
+                  ? require("./assets/store_active.png")
+                  : require("./assets/store_inactive.png")
+              }
+              style={styles.tabIcon}
+            />
+          ),
         }}
       />
       <Tab.Screen
@@ -69,6 +100,16 @@ function MainNavigator() {
         options={{
           headerShown: false,
           backBehavior: "order",
+          tabBarIcon: ({ focused }) => (
+            <Image
+              source={
+                focused
+                  ? require("./assets/cart_active.png")
+                  : require("./assets/cart_inactive.png")
+              }
+              style={styles.tabIcon}
+            />
+          ),
         }}
       />
       <Tab.Screen
@@ -76,8 +117,47 @@ function MainNavigator() {
         component={ProfileScreen}
         options={{
           backBehavior: "order",
+          headerStyle: {
+            backgroundColor: "#1E1E1E",
+            borderBottomColor: "#6B0F1A",
+            borderBottomWidth: 1,
+            shadowColor: "#6B0F1A",
+          },
+          headerTintColor: "#6B0F1A",
+          headerTitleStyle: {
+            fontWeight: "bold",
+          },
+          headerTitleAlign: "center",
+          tabBarIcon: ({ focused }) => (
+            <Image
+              source={
+                focused
+                  ? require("./assets/profile_active.png")
+                  : require("./assets/profile_inactive.png")
+              }
+              style={styles.tabIcon}
+            />
+          ),
         }}
+        initialParams={{ handleLogOut }}
       />
     </Tab.Navigator>
   );
 }
+const styles = StyleSheet.create({
+  tabBar: {
+    backgroundColor: "#1E1E1E", // Dark background color
+    borderTopColor: "#6B0F1A", // Bordeaux accent color
+    borderTopWidth: 1,
+    paddingTop: 4,
+  },
+  label: {
+    fontSize: 14,
+    fontWeight: "bold",
+  },
+  tabIcon: {
+    width: 24,
+    height: 24,
+    resizeMode: "contain",
+  },
+});

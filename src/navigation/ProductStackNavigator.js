@@ -7,11 +7,26 @@ const ProductStack = createStackNavigator();
 
 export default function ProductStackNavigator() {
   return (
-    <ProductStack.Navigator>
+    <ProductStack.Navigator
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: "#1E1E1E",
+          borderBottomColor: "#6B0F1A",
+          borderBottomWidth: 1,
+          shadowColor: "#6B0F1A",
+        },
+        headerTintColor: "#6B0F1A", // Light text color
+        headerTitleStyle: {
+          fontWeight: "bold",
+        },
+        headerTitleAlign: "center",
+      }}
+    >
       <ProductStack.Screen
         name="Product"
         component={ProductScreen}
         options={{
+          title: "Products",
           backBehavior: "order",
         }}
       />
@@ -19,7 +34,6 @@ export default function ProductStackNavigator() {
         name="ProductDetail"
         component={ProductDetailScreen}
         options={{
-          headerShown: false,
           backBehavior: "order",
         }}
       />

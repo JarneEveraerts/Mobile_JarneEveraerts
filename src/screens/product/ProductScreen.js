@@ -1,61 +1,13 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { ScrollView, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import ProductBox from "../../components/product/ProductBoxComponent";
+import useGetAllProducts from "../../hooks/products/useGetAllProducts";
+import useSeedProducts from "../../hooks/products/useSeedProducts";
 
 export default function ProductListScreen() {
+  const products = useGetAllProducts();
   const navigation = useNavigation();
-  const products = [
-    {
-      name: "Product 1",
-      price: "$9.99",
-      image: "test",
-      description:
-        "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Blanditiis aspernatur placeat corporis, eligendi qui fuga laborum, quis sapiente incidunt soluta, ratione et aliquid obcaecati nobis dolor quisquam autem asperiores iure.",
-    },
-    {
-      name: "Product 2",
-      price: "$19.99",
-      image: "test",
-      description:
-        "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Blanditiis aspernatur placeat corporis, eligendi qui fuga laborum, quis sapiente incidunt soluta, ratione et aliquid obcaecati nobis dolor quisquam autem asperiores iure.",
-    },
-    {
-      name: "Product 3",
-      price: "$29.99",
-      image: "test",
-      description:
-        "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Blanditiis aspernatur placeat corporis, eligendi qui fuga laborum, quis sapiente incidunt soluta, ratione et aliquid obcaecati nobis dolor quisquam autem asperiores iure.",
-    },
-    {
-      name: "Product 4",
-      price: "$39.99",
-      image: "test",
-      description:
-        "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Blanditiis aspernatur placeat corporis, eligendi qui fuga laborum, quis sapiente incidunt soluta, ratione et aliquid obcaecati nobis dolor quisquam autem asperiores iure.",
-    },
-    {
-      name: "Product 5",
-      price: "$49.99",
-      image: "test",
-      description:
-        "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Blanditiis aspernatur placeat corporis, eligendi qui fuga laborum, quis sapiente incidunt soluta, ratione et aliquid obcaecati nobis dolor quisquam autem asperiores iure.",
-    },
-    {
-      name: "Product 6",
-      price: "$59.99",
-      image: "test",
-      description:
-        "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Blanditiis aspernatur placeat corporis, eligendi qui fuga laborum, quis sapiente incidunt soluta, ratione et aliquid obcaecati nobis dolor quisquam autem asperiores iure.",
-    },
-    {
-      name: "Product 7",
-      price: "$69.99",
-      image: "test",
-      description:
-        "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Blanditiis aspernatur placeat corporis, eligendi qui fuga laborum, quis sapiente incidunt soluta, ratione et aliquid obcaecati nobis dolor quisquam autem asperiores iure.",
-    },
-  ];
 
   const handleProductPress = (product) => {
     navigation.navigate("ProductDetail", { product });
@@ -81,5 +33,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingTop: 16,
     paddingBottom: 32,
+    backgroundColor: "#1E1E1E", // Dark background color
   },
 });

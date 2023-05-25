@@ -8,26 +8,44 @@ const CartStack = createStackNavigator();
 
 export default function CartStackNavigator() {
   return (
-    <CartStack.Navigator>
-      <CartStack.Screen
-        name="Cart"
-        component={CartScreen}
-        options={{
-          backBehavior: "order",
-        }}
-      />
+    <CartStack.Navigator
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: "#1E1E1E",
+          borderBottomColor: "#6B0F1A",
+          borderBottomWidth: 1,
+          shadowColor: "#6B0F1A",
+        },
+        headerTintColor: "#6B0F1A", // Light text color
+        headerTitleStyle: {
+          fontWeight: "bold",
+        },
+        headerTitleAlign: "center",
+      }}
+    >
+      <CartStack.Screen name="Cart" component={CartScreen} />
       <CartStack.Screen
         name="Confirm"
         component={ConfirmScreen}
         options={{
-          backBehavior: "order",
+          headerShown: false,
         }}
       />
       <CartStack.Screen
         name="Confirmation"
         component={ConfirmationScreen}
-        options={{
-          backBehavior: "order",
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: "#1E1E1E",
+            borderBottomColor: "#6B0F1A",
+            borderBottomWidth: 1,
+            shadowColor: "#6B0F1A",
+          },
+          headerTintColor: "#6B0F1A", // Light text color
+          headerTitleStyle: {
+            fontWeight: "bold",
+          },
+          headerTitleAlign: "center",
         }}
       />
     </CartStack.Navigator>
