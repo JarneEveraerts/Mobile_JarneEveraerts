@@ -1,4 +1,16 @@
-import React from "react";
+import * as Yup from "yup";
+
+const orderSchema = Yup.object().shape({
+  userId: Yup.string().required(),
+  name: Yup.string().required(),
+  email: Yup.string().email().required(),
+  street: Yup.string().required(),
+  city: Yup.string().required(),
+  postalCode: Yup.string().required(),
+  phoneNumber: Yup.string().required(),
+  orderDate: Yup.date().required(),
+});
+
 class Order {
   constructor(
     userId,
@@ -25,5 +37,10 @@ class Order {
     );
     this.orderDate = orderDate;
   }
+
+  validate() {
+    return orderSchema.validate(this, { abortEarly: false });
+  }
 }
+
 export default Order;

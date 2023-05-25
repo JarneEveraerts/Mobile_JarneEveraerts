@@ -43,8 +43,16 @@ export default function CartConfirmationComponent({ handleConfirmation }) {
       cart,
       new Date()
     );
-    dispatch(clearCart());
-    handleConfirmation(await saveOrder(order));
+    order
+      .validate()
+      .then(async (validateOrder) => {
+        console.log(validateOrder);
+        dispatch(clearCart());
+        handleConfirmation(await saveOrder(order));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
   return (
     <View style={styles.container}>
