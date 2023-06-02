@@ -14,6 +14,7 @@ import ProfileScreen from "./src/screens/profile/ProfileScreen";
 import ProductStackNavigator from "./src/navigation/ProductStackNavigator";
 import CartStackNavigator from "./src/navigation/CartStackNavigator";
 import AuthStackNavigator from "./src/navigation/AuthStackNavigator";
+import ProfileStackNavigator from "./src/navigation/ProfileStackNavigator";
 
 const Tab = createBottomTabNavigator();
 const RootStack = createStackNavigator();
@@ -114,20 +115,10 @@ function MainNavigator({ handleLogOut }) {
       />
       <Tab.Screen
         name="Profile"
-        component={ProfileScreen}
+        component={ProfileStackNavigator}
         options={{
+          headerShown: false,
           backBehavior: "order",
-          headerStyle: {
-            backgroundColor: "#1E1E1E",
-            borderBottomColor: "#6B0F1A",
-            borderBottomWidth: 1,
-            shadowColor: "#6B0F1A",
-          },
-          headerTintColor: "#6B0F1A",
-          headerTitleStyle: {
-            fontWeight: "bold",
-          },
-          headerTitleAlign: "center",
           tabBarIcon: ({ focused }) => (
             <Image
               source={

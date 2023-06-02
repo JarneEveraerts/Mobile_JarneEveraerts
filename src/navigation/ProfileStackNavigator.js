@@ -2,6 +2,7 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import OrderScreen from "../screens/profile/OrderScreen";
 import ProfileScreen from "../screens/profile/ProfileScreen";
+import OrderDetailScreen from "../screens/profile/OrderDetailScreen";
 
 const ProfileStack = createStackNavigator();
 
@@ -26,7 +27,7 @@ export default function ProfileStackNavigator() {
         name="Profile"
         component={ProfileScreen}
         options={{
-          title: "Profiles",
+          title: "Profile",
           backBehavior: "order",
         }}
       />
@@ -37,13 +38,13 @@ export default function ProfileStackNavigator() {
           backBehavior: "order",
         }}
       />
-      {/* <ProfileStack.Screen
+      <ProfileStack.Screen
         name="OrderDetail"
         component={OrderDetailScreen}
         options={{
           backBehavior: "order",
         }}
-      /> */}
+      />
     </ProfileStack.Navigator>
   );
 }
