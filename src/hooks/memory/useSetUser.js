@@ -18,7 +18,7 @@ const useSetUser = () => {
             userDoc.data().id,
             userDoc.data().name,
             userDoc.data().email,
-            userDoc.data().Orders
+            userDoc.data().orders
           );
           console.log("User data from Firestore", userData);
           dispatch(setUser(userData));

@@ -1,7 +1,10 @@
 import React from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
+import { useSelector } from "react-redux";
 
 export default function ProductBox({ name, price, image, onPress }) {
+  const user = useSelector((state) => state.user.data);
+  console.log("ProductBox", user);
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
       <Image source={{ uri: image }} style={styles.image} />

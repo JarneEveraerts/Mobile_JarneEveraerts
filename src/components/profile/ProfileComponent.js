@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import {
   View,
   Text,
@@ -7,21 +7,28 @@ import {
   Button,
   TouchableOpacity,
 } from "react-native";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { clearCart } from "../../store/cart/slice";
+import { useNavigation } from "@react-navigation/native";
+import { Dispatch } from "react";
 
 import useGetById from "../../hooks/users/useGetById";
 import useGetUid from "../../hooks/memory/useGetUid";
 
 export default function ProfileScreen({ handleLogOut }) {
   const dispatch = useDispatch();
-  const uId = useGetUid();
-  const user = useGetById(uId);
+  const navigation = useNavigation();
+  const user = useSelector((state) => state.user.data);
+
   console.log(user + "ProfileScreen user");
   const logOut = () => {
     dispatch(clearCart());
     handleLogOut();
   };
+  const box = () => {
+    navigation.navigate("Order", { orders: user?.orders });
+  };
+
   console.log(handleLogOut + "ProfileScreen handleLogout");
   return (
     <View style={styles.container}>
@@ -42,6 +49,11 @@ export default function ProfileScreen({ handleLogOut }) {
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.button} onPress={() => logOut()}>
           <Text style={styles.buttonText}>Logout</Text>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.button} onPress={() => box()}>
+          <Text style={styles.buttonText}>Box</Text>
         </TouchableOpacity>
       </View>
     </View>
