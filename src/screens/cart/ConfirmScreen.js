@@ -6,13 +6,15 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { BackHandler } from "react-native";
 import ConfirmComponent from "../../components/cart/ConfirmComponent";
 
 export default function ConfirmScreen({ route }) {
+  const navigator = useNavigation();
   useEffect(() => {
     const backAction = () => {
-      // Prevent navigation when back button is pressed
+      navigator.navigate("Cart");
       return true;
     };
 
@@ -22,7 +24,7 @@ export default function ConfirmScreen({ route }) {
     );
 
     return () => backHandler.remove(); // Clean up the event listener
-  }, []);
+  }, [navigator]);
   const { orderId } = route.params;
 
   return (
