@@ -1,7 +1,12 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
+import useUserAddOrder from "../../hooks/memory/useUserAddOrder";
 
 export default function ConfirmComponent({ orderId }) {
+  const userAddOrder = useUserAddOrder();
+  useEffect(() => {
+    userAddOrder(orderId);
+  }, [orderId, userAddOrder]);
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Order Confirmation</Text>

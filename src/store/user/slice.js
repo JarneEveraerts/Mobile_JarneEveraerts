@@ -3,7 +3,7 @@ import User from "../../../models/User";
 
 const userSlice = createSlice({
   initialState: {
-    data: null,
+    data: new User(),
   },
   name: "user",
   reducers: {
@@ -15,13 +15,18 @@ const userSlice = createSlice({
         action.payload.orders
       );
       state.data = user;
-      console.log("User set in Redux");
     },
     clearUser: (state) => {
       state.data = null;
     },
+    addUserOrder: (state, action) => {
+      const order = action.payload;
+      const orders = state.data.orders || []; // Initialize as empty array if undefined
+      orders.push(order);
+      state.data.orders = orders;
+    },
   },
 });
 
-export const { setUser, clearUser } = userSlice.actions;
+export const { setUser, clearUser, addUserOrder } = userSlice.actions;
 export const userReducer = userSlice.reducer;

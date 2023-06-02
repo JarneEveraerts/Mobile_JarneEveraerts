@@ -17,7 +17,9 @@ import {
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../../firebase";
 import useSaveUid from "../../hooks/memory/useSaveUid";
+import useSetUser from "../../hooks/memory/useSetUser";
 import useGetUid from "../../hooks/memory/useGetUid";
+import { useSelector } from "react-redux";
 
 export default function LoginComponent({ onLogin }) {
   const navigation = useNavigation();
@@ -25,19 +27,20 @@ export default function LoginComponent({ onLogin }) {
   const [password, setPassword] = useState("");
   const [loggedIn, setLoggedIn] = useState(false);
   const saveUid = useSaveUid();
+  const setUser = useSetUser();
   useEffect(() => {
     if (loggedIn) {
       onLogin();
     }
   }, [loggedIn, onLogin]);
+
   const handleLogin = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        // Signed in
         const user = userCredential.user;
-        console.log("User logged in", user.uid);
-
         saveUid(user.uid);
+        console.log("saveuid works", user.uid);
+        setUser(user.uid);
         setLoggedIn(true);
       })
       .catch((error) => {

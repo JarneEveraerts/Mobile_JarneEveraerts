@@ -1,13 +1,15 @@
-import { useState, useEffect } from "react";
+import { useCallback } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { firestore } from "../../../firebase";
 import User from "../../../models/User";
+import { useDispatch, useSelector } from "react-redux";
+import { setUser } from "../../store/user/slice";
 
-const useGetUserById = (id) => {
-  const [user, setUser] = useState(null);
+const useSetUser = () => {
+  const dispatch = useDispatch();
 
-  useEffect(() => {
-    const fetchUser = async () => {
+  const setUserCallback = useCallback(
+    async (id) => {
       try {
         const userRef = doc(firestore, "users", id);
         const userDoc = await getDoc(userRef);
@@ -18,19 +20,21 @@ const useGetUserById = (id) => {
             userDoc.data().email,
             userDoc.data().Orders
           );
-          setUser(userData);
+          console.log("User data from Firestore", userData);
+          dispatch(setUser(userData));
+          const test = useSelector((state) => state.user.data);
+          console.log("User set in Redux", test);
         } else {
           console.log("No such user in Firestore!");
         }
       } catch (error) {
         console.error("Error getting user from Firestore:", error);
       }
-    };
+    },
+    [dispatch]
+  );
 
-    fetchUser();
-  }, [id]);
-
-  return user;
+  return setUserCallback;
 };
 
-export default useGetUserById;
+export default useSetUser;
