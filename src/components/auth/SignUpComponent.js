@@ -60,7 +60,7 @@ export default function SignUpComponent() {
   };
 
   return (
-    <KeyboardAvoidingView behavior="padding" style={styles.container}>
+    <KeyboardAvoidingView behavior="margin" style={styles.container}>
       <View style={styles.formContainer}>
         <TextInput
           style={[styles.input, validationErrors.name && styles.inputError]}

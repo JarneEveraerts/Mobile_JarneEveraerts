@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  KeyboardAvoidingView,
   Alert,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
@@ -81,7 +82,7 @@ export default function CartConfirmationComponent({ handleConfirmation }) {
   };
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView behavior="margin" style={styles.container}>
       <View style={styles.formContainer}>
         <TextInput
           style={[styles.input, validationErrors.name && styles.inputError]}
@@ -142,7 +143,7 @@ export default function CartConfirmationComponent({ handleConfirmation }) {
           <Text style={styles.buttonText}>Confirm Order</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
