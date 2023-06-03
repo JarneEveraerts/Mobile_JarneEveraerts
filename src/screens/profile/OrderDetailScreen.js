@@ -19,7 +19,6 @@ const OrderDetailScreen = ({ route }) => {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    alignItems: "center",
     paddingTop: 16,
     paddingBottom: 32,
     backgroundColor: "#1E1E1E", // Dark background color

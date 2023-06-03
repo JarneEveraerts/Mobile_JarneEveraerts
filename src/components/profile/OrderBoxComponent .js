@@ -15,7 +15,7 @@ export default function OrderBoxComponent({ order }) {
         onPress={() => handleOrderPress()}
       >
         <View style={styles.orderBoxHeader}>
-          <Text style={styles.orderBoxHeaderText}>Order #{order}</Text>
+          <Text style={styles.orderBoxHeaderText}>Order: {order}</Text>
         </View>
       </TouchableOpacity>
     </View>
@@ -24,11 +24,11 @@ export default function OrderBoxComponent({ order }) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    padding: (5, 10), // Vertical padding of 5 and horizontal padding of 5 (shorthand
-    horizontal: 5,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
     backgroundColor: "#1E1E1E", // Dark background color
     width: "100%",
+    alignItems: "flex-start", // Align boxes at the top
   },
   orderBox: {
     backgroundColor: "#fff",
@@ -38,6 +38,7 @@ const styles = StyleSheet.create({
     padding: 12,
     marginBottom: 10,
     backgroundColor: "#292929", // Dark background color
+    alignItems: "flex-start", // Align boxes at the top
   },
   orderBoxHeader: {
     flexDirection: "row",
