@@ -130,7 +130,7 @@ function MainNavigator({ handleLogOut }) {
             />
           ),
         }}
-        initialParams={{ handleLogOut }}
+        initialParams={{ handleLogOut }} // Pass the handleLogOut function as initialParams
       />
     </Tab.Navigator>
   );

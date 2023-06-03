@@ -6,7 +6,9 @@ import OrderDetailScreen from "../screens/profile/OrderDetailScreen";
 
 const ProfileStack = createStackNavigator();
 
-export default function ProfileStackNavigator() {
+export default function ProfileStackNavigator({ route }) {
+  const handleLogOut = route.params?.handleLogOut;
+
   return (
     <ProfileStack.Navigator
       screenOptions={{
@@ -26,6 +28,7 @@ export default function ProfileStackNavigator() {
       <ProfileStack.Screen
         name="Profile"
         component={ProfileScreen}
+        initialParams={{ handleLogOut }}
         options={{
           title: "Profile",
           backBehavior: "order",

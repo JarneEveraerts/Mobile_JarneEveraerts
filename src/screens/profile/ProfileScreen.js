@@ -5,7 +5,6 @@ import { useNavigation } from "@react-navigation/native";
 import Profile from "../../components/profile/ProfileComponent";
 
 export default function ProfileScreen({ route }) {
-  const navigation = useNavigation();
   const handleLogOut = route.params?.handleLogOut;
   console.log("ProfileScreen handleLogOut", handleLogOut);
 
