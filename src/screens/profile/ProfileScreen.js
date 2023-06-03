@@ -20,26 +20,4 @@ const styles = StyleSheet.create({
     height: "100%",
     width: "100%",
   },
-  text: {
-    fontSize: 24,
-    fontWeight: "bold",
-  },
-  buttonContainer: {
-    height: 100,
-    width: "100%",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  button: {
-    height: 50,
-    width: 100,
-    backgroundColor: "#fff",
-    borderRadius: 10,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  buttonText: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
 });
