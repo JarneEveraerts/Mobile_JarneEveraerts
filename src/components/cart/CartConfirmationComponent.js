@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -30,6 +31,7 @@ export default function CartConfirmationComponent({ handleConfirmation }) {
   const [city, setCity] = useState("");
   const [postalCode, setPostalCode] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [validationErrors, setValidationErrors] = useState({});
 
   const handleOrder = async () => {
     const order = new Order(
@@ -43,63 +45,92 @@ export default function CartConfirmationComponent({ handleConfirmation }) {
       cart,
       new Date()
     );
-    order
-      .validate()
-      .then(async (validateOrder) => {
-        console.log(validateOrder);
-        dispatch(clearCart());
-        handleConfirmation(await saveOrder(order));
-      })
-      .catch((error) => {
+
+    try {
+      await order.validate();
+      dispatch(clearCart());
+
+      setCity("");
+      setPostalCode("");
+      setPhoneNumber("");
+      setStreet("");
+      setName("");
+      setEmail("");
+
+      handleConfirmation(await saveOrder(order));
+    } catch (error) {
+      if (error.name === "ValidationError") {
+        const errors = {};
+        error.inner.forEach((err) => {
+          errors[err.path] = err.message;
+        });
+        setValidationErrors(errors);
+
+        // Clear the corresponding input field on error
+        if (errors.name) setName("");
+        if (errors.email) setEmail("");
+        if (errors.street) setStreet("");
+        if (errors.city) setCity("");
+        if (errors.postalCode) setPostalCode("");
+        if (errors.phoneNumber) setPhoneNumber("");
+      } else {
         console.log(error);
-      });
+        Alert.alert("Error", "An unexpected error occurred.");
+      }
+    }
   };
+
   return (
     <View style={styles.container}>
       <View style={styles.formContainer}>
         <TextInput
-          style={styles.input}
-          placeholder="Full Name"
+          style={[styles.input, validationErrors.name && styles.inputError]}
+          placeholder={validationErrors.name || "Full Name"}
           value={name}
           onChangeText={(text) => setName(text)}
           placeholderTextColor="#999"
         />
 
         <TextInput
-          style={styles.input}
-          placeholder="Email"
+          style={[styles.input, validationErrors.email && styles.inputError]}
+          placeholder={validationErrors.email || "Email"}
           value={email}
           onChangeText={(text) => setEmail(text)}
           placeholderTextColor="#999"
         />
 
         <TextInput
-          style={styles.input}
-          placeholder="Street"
+          style={[styles.input, validationErrors.street && styles.inputError]}
+          placeholder={validationErrors.street || "Street"}
           value={street}
           onChangeText={(text) => setStreet(text)}
           placeholderTextColor="#999"
         />
-        <View style={styles.addressContainer}>
-          <TextInput
-            style={styles.cityInput}
-            placeholder="City"
-            value={city}
-            onChangeText={(text) => setCity(text)}
-            placeholderTextColor="#999"
-          />
-          <TextInput
-            style={styles.postalInput}
-            placeholder="Postal Code"
-            value={postalCode}
-            onChangeText={(text) => setPostalCode(text)}
-            placeholderTextColor="#999"
-          />
-        </View>
 
         <TextInput
-          style={styles.input}
-          placeholder="Phone Number"
+          style={[styles.input, validationErrors.city && styles.inputError]}
+          placeholder={validationErrors.city || "City"}
+          value={city}
+          onChangeText={(text) => setCity(text)}
+          placeholderTextColor="#999"
+        />
+        <TextInput
+          style={[
+            styles.input,
+            validationErrors.postalCode && styles.inputError,
+          ]}
+          placeholder={validationErrors.postalCode || "Postal Code"}
+          value={postalCode}
+          onChangeText={(text) => setPostalCode(text)}
+          placeholderTextColor="#999"
+        />
+
+        <TextInput
+          style={[
+            styles.input,
+            validationErrors.phoneNumber && styles.inputError,
+          ]}
+          placeholder={validationErrors.phoneNumber || "Phone Number"}
           value={phoneNumber}
           onChangeText={(text) => setPhoneNumber(text)}
           placeholderTextColor="#999"
@@ -107,7 +138,7 @@ export default function CartConfirmationComponent({ handleConfirmation }) {
       </View>
 
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button} onPress={() => handleOrder()}>
+        <TouchableOpacity style={styles.button} onPress={handleOrder}>
           <Text style={styles.buttonText}>Confirm Order</Text>
         </TouchableOpacity>
       </View>
@@ -149,13 +180,18 @@ const styles = StyleSheet.create({
     backgroundColor: "#1E1E1E", // Dark background color
     color: "#FFFFFF", // Light text color
   },
-
+  inputError: {
+    borderColor: "red",
+  },
+  errorText: {
+    color: "red",
+    marginBottom: 10,
+  },
   addressContainer: {
     flexDirection: "row",
     marginBottom: 10,
     alignContent: "space-between",
   },
-
   cityInput: {
     flexGrow: 5,
     height: 50,
