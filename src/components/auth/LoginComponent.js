@@ -20,12 +20,14 @@ import useSaveUid from "../../hooks/memory/useSaveUid";
 import useSetUser from "../../hooks/memory/useSetUser";
 import useGetUid from "../../hooks/memory/useGetUid";
 import { useSelector } from "react-redux";
+import * as Yup from "yup";
 
 export default function LoginComponent({ onLogin }) {
   const navigation = useNavigation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loggedIn, setLoggedIn] = useState(false);
+  const [validationErrors, setValidationErrors] = useState({});
   const saveUid = useSaveUid();
   const setUser = useSetUser();
   useEffect(() => {
@@ -34,35 +36,62 @@ export default function LoginComponent({ onLogin }) {
     }
   }, [loggedIn, onLogin]);
 
-  const handleLogin = () => {
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        saveUid(user.uid);
-        console.log("saveuid works", user.uid);
-        setUser(user.uid);
-        setLoggedIn(true);
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log("Error logging in", errorCode, errorMessage);
-      });
+  const validationSchema = Yup.object().shape({
+    email: Yup.string().email("Invalid email").required("Email is required"),
+    password: Yup.string().required("Password is required"),
+  });
+
+  const handleLogin = async () => {
+    try {
+      await validationSchema.validate(
+        { email, password },
+        { abortEarly: false }
+      );
+
+      await signInWithEmailAndPassword(auth, email, password).then(
+        (userCredential) => {
+          const user = userCredential.user;
+          saveUid(user.uid);
+          console.log("saveuid works", user.uid);
+          setUser(user.uid);
+          setLoggedIn(true);
+        }
+      );
+    } catch (error) {
+      if (error.name === "ValidationError") {
+        const errors = {};
+        error.inner.forEach((err) => {
+          errors[err.path] = err.message;
+        });
+        setValidationErrors(errors);
+        if (errors.email) setEmail("");
+        if (errors.password) setPassword("");
+      } else if ((error.code = "auth/user-not-found")) {
+        validationErrors.email = "Invalid email or password. Please try again.";
+        validationErrors.password =
+          "Invalid email or password. Please try again.";
+        setPassword("");
+        setEmail("");
+      } else {
+        console.log("Error validating user:", error.message);
+        return;
+      }
+    }
   };
 
   return (
     <KeyboardAvoidingView behavior="padding" style={styles.container}>
       <View style={styles.formContainer}>
         <TextInput
-          style={styles.input}
-          placeholder="Email"
+          style={[styles.input, validationErrors.email && styles.inputError]}
+          placeholder={validationErrors.email || "Email"}
           value={email}
           onChangeText={(text) => setEmail(text)}
           placeholderTextColor="#999" // Placeholder text color
         />
         <TextInput
-          style={styles.input}
-          placeholder="Password"
+          style={[styles.input, validationErrors.password && styles.inputError]}
+          placeholder={validationErrors.password || "Password"}
           secureTextEntry={true}
           value={password}
           onChangeText={(text) => setPassword(text)}
@@ -83,6 +112,7 @@ export default function LoginComponent({ onLogin }) {
     </KeyboardAvoidingView>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -105,6 +135,9 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     backgroundColor: "#292929", // Dark background color
     color: "#FFFFFF", // Light text color
+  },
+  inputError: {
+    borderColor: "red",
   },
   link: {
     alignSelf: "flex-end",

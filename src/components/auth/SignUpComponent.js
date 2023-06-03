@@ -21,57 +21,79 @@ export default function SignUpComponent() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [name, setName] = useState("");
+  const [validationErrors, setValidationErrors] = useState({});
 
-  const handleSignUp = () => {
+  const handleSignUp = async () => {
     if (password !== confirmPassword) {
       alert("Passwords do not match!");
       return;
     }
+    const user = new User(null, name, email);
 
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        const user = new User(userCredential.user.uid, name, email);
-        user.Save();
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log("Error signing up", errorCode, errorMessage);
-      });
+    try {
+      await user.validate();
+      await createUserWithEmailAndPassword(auth, email, password).then(
+        (userCredential) => {
+          user.id = userCredential.user.uid;
+          user.Save();
+        }
+      );
+    } catch (error) {
+      if (error.name === "ValidationError") {
+        const errors = {};
+        error.inner.forEach((err) => {
+          errors[err.path] = err.message;
+        });
+        setValidationErrors(errors);
+        if (errors.email) setEmail("");
+        if (errors.password) setPassword("");
+        if (errors.confirmPassword) setConfirmPassword("");
+        if (errors.name) setName("");
+      } else if (error.code === "auth/email-already-in-use") {
+        validationErrors.email = "Email already in use";
+        setEmail("");
+      } else {
+        console.log("Error validating user:", error.message);
+        return;
+      }
+    }
   };
 
   return (
     <KeyboardAvoidingView behavior="padding" style={styles.container}>
       <View style={styles.formContainer}>
         <TextInput
-          style={styles.input}
-          placeholder="Name"
+          style={[styles.input, validationErrors.name && styles.inputError]}
+          placeholder={validationErrors.name || "Name"}
           value={name}
           onChangeText={(text) => setName(text)}
-          placeholderTextColor="#999" // Placeholder text color
+          placeholderTextColor="#999"
         />
         <TextInput
-          style={styles.input}
-          placeholder="Email"
+          style={[styles.input, validationErrors.email && styles.inputError]}
+          placeholder={validationErrors.email || "Email"}
           value={email}
           onChangeText={(text) => setEmail(text)}
-          placeholderTextColor="#999" // Placeholder text color
+          placeholderTextColor="#999"
         />
         <TextInput
-          style={styles.input}
-          placeholder="Password"
+          style={[styles.input, validationErrors.password && styles.inputError]}
+          placeholder={validationErrors.password || "Password"}
           secureTextEntry={true}
           value={password}
           onChangeText={(text) => setPassword(text)}
-          placeholderTextColor="#999" // Placeholder text color
+          placeholderTextColor="#999"
         />
         <TextInput
-          style={styles.input}
-          placeholder="Confirm Password"
+          style={[
+            styles.input,
+            validationErrors.confirmPassword && styles.inputError,
+          ]}
+          placeholder={validationErrors.confirmPassword || "Confirm Password"}
           secureTextEntry={true}
           value={confirmPassword}
           onChangeText={(text) => setConfirmPassword(text)}
-          placeholderTextColor="#999" // Placeholder text color
+          placeholderTextColor="#999"
         />
         <TouchableOpacity
           style={styles.link}
@@ -88,6 +110,7 @@ export default function SignUpComponent() {
     </KeyboardAvoidingView>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -100,41 +123,56 @@ const styles = StyleSheet.create({
   formContainer: {
     width: "100%",
     marginBottom: 16,
+    backgroundColor: "#292929", // Dark background color
+    borderRadius: 10,
+    padding: 20,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 3,
   },
   input: {
-    height: 40,
+    height: 50,
     borderWidth: 1,
     borderColor: "#6B0F1A", // Bordeaux accent color
-    borderRadius: 4,
-    paddingHorizontal: 12,
-    marginBottom: 12,
-    backgroundColor: "#292929", // Dark background color
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    marginBottom: 10,
+    backgroundColor: "#1E1E1E", // Dark background color
     color: "#FFFFFF", // Light text color
   },
-  link: {
-    alignSelf: "flex-end",
-    marginTop: -10,
+  inputError: {
+    borderColor: "red",
   },
-  linkText: {
-    color: "#6B0F1A", // Bordeaux accent color
-    fontSize: 14,
-    fontWeight: "bold",
+  errorText: {
+    color: "red",
+    marginBottom: 10,
   },
   buttonContainer: {
-    width: "100%",
-    alignItems: "center",
+    marginTop: 20,
   },
   button: {
     backgroundColor: "#6B0F1A", // Bordeaux accent color
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 4,
-    alignItems: "center",
-    marginBottom: 12,
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+    borderRadius: 5,
   },
   buttonText: {
     color: "#FFFFFF", // Light text color
     fontSize: 16,
     fontWeight: "bold",
+    textAlign: "center",
+  },
+  link: {
+    marginTop: 10,
+    alignSelf: "flex-start",
+  },
+  linkText: {
+    color: "#6B0F1A", // Bordeaux accent color
+    fontSize: 14,
   },
 });
