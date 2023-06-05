@@ -12,11 +12,13 @@ import {
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../../firebase";
 import { useNavigation } from "@react-navigation/native";
+import useSaveUser from "../../hooks/users/useSaveUser";
 
 import User from "../../../models/User";
 
 export default function SignUpComponent() {
   const navigation = useNavigation();
+  const saveUser = useSaveUser();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -35,7 +37,9 @@ export default function SignUpComponent() {
       await createUserWithEmailAndPassword(auth, email, password).then(
         (userCredential) => {
           user.id = userCredential.user.uid;
-          user.Save();
+
+          saveUser(user);
+          navigation.navigate("Login");
         }
       );
     } catch (error) {
