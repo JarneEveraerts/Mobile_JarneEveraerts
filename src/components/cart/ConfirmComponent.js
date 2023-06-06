@@ -1,16 +1,31 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import useUserAddOrder from "../../hooks/memory/useUserAddOrder";
+import { useNavigation } from "@react-navigation/native";
 
 export default function ConfirmComponent({ orderId }) {
+  const navigator = useNavigation();
   const userAddOrder = useUserAddOrder();
   useEffect(() => {
     userAddOrder(orderId);
   }, [orderId, userAddOrder]);
+
+  const navigate = async (orderId) => {
+    navigator.navigate("Profile", {
+      screen: "OrderDetail",
+      params: { order: orderId },
+    });
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Order Confirmation</Text>
-      <Text style={styles.orderIdText}>Order ID: {orderId}</Text>
+      <TouchableOpacity
+        style={styles.orderIdText}
+        onPress={() => navigate(orderId)}
+      >
+        <Text>Order ID: {orderId}</Text>
+      </TouchableOpacity>
     </View>
   );
 }

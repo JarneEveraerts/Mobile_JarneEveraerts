@@ -7,7 +7,7 @@ const orderSchema = Yup.object().shape({
     .required(),
   email: Yup.string().email().required(),
   street: Yup.string()
-    .matches(/^[^\d]+$/, "Street name cannot contain digits")
+    .matches(/^[^\d]+(\d+)$/, "Street consists of letters and ends with digits")
     .required(),
   city: Yup.string()
     .matches(/^[^\d]+$/, "City name cannot contain digits")

@@ -5,9 +5,9 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  BackHandler,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { BackHandler } from "react-native";
 import ConfirmComponent from "../../components/cart/ConfirmComponent";
 
 export default function ConfirmScreen({ route }) {
